@@ -1,3 +1,13 @@
+import adventureThumb from '../assets/genres/adventure.svg'
+import actionThumb from '../assets/genres/action.svg'
+import indieThumb from '../assets/genres/indie.svg'
+import puzzleThumb from '../assets/genres/puzzle.svg'
+import racingThumb from '../assets/genres/racing.svg'
+import rpgThumb from '../assets/genres/rpg.svg'
+import shooterThumb from '../assets/genres/shooter.svg'
+import strategyThumb from '../assets/genres/strategy.svg'
+
+
 import cyberpunkCover from '../assets/covers/cyberpunk-2077.svg'
 import eldenRingCover from '../assets/covers/elden-ring.svg'
 import forzaCover from '../assets/covers/forza-horizon-5.svg'
@@ -23,6 +33,16 @@ export type Game = {
   image: string
 }
 
+export const genres: Genre[] = [
+  { id: 1, name: 'Action', image: actionThumb },
+  { id: 2, name: 'Indie', image: indieThumb },
+  { id: 3, name: 'Adventure', image: adventureThumb },
+  { id: 4, name: 'RPG', image: rpgThumb },
+  { id: 5, name: 'Shooter', image: shooterThumb },
+  { id: 6, name: 'Strategy', image: strategyThumb },
+  { id: 7, name: 'Racing', image: racingThumb },
+  { id: 8, name: 'Puzzle', image: puzzleThumb },
+]
 
 export const games: Game[] = [
   { id: 1, title: 'Grand Theft Auto V', genre: 'Action', releaseYear: 2013, metacritic: 97, platforms: ['PC', 'PlayStation', 'Xbox'], image: gtaCover },
