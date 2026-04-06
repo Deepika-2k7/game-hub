@@ -2,11 +2,18 @@ import {
   Badge,
   Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   Grid,
   Heading,
   HStack,
   Icon,
+  IconButton,
   Image,
   Input,
   InputGroup,
@@ -22,6 +29,7 @@ import {
   Text,
   VStack,
   useColorMode,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { useDeferredValue, useMemo, useState } from 'react'
 import './App.css'
@@ -51,6 +59,17 @@ function ChevronGlyph() {
       <path
         fill="currentColor"
         d="M6.7 9.3a1 1 0 0 1 1.4 0l3.9 3.9 3.9-3.9a1 1 0 0 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4Z"
+      />
+    </Icon>
+  )
+}
+
+function MenuGlyph() {
+  return (
+    <Icon viewBox="0 0 24 24" boxSize={5}>
+      <path
+        fill="currentColor"
+        d="M4 7a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5A1 1 0 0 1 4 7Zm0 5a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Zm1 4a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2H5Z"
       />
     </Icon>
   )
@@ -130,8 +149,88 @@ function SelectMenu<T extends string>({
   )
 }
 
+function GenreMenu({
+  darkEnabled,
+  genreButtonBg,
+  railText,
+  selectedGenre,
+  onSelectGenre,
+}: {
+  darkEnabled: boolean
+  genreButtonBg: string
+  railText: string
+  selectedGenre: string
+  onSelectGenre: (genre: string) => void
+}) {
+  return (
+    <VStack align="stretch" spacing={5}>
+      <HStack
+        borderRadius="xl"
+        color={railText}
+        cursor="pointer"
+        onClick={() => onSelectGenre('All Genres')}
+        px={1}
+        py={1}
+        spacing={4}
+        transition="transform 0.15s ease, opacity 0.15s ease"
+        bg={selectedGenre === 'All Genres' ? genreButtonBg : 'transparent'}
+        _hover={{ opacity: 0.95, transform: 'translateX(4px)' }}
+      >
+        <Flex
+          align="center"
+          bg={darkEnabled ? 'whiteAlpha.100' : 'blackAlpha.100'}
+          borderRadius="lg"
+          boxSize="48px"
+          fontWeight="800"
+          justify="center"
+        >
+          All
+        </Flex>
+        <Text
+          color={selectedGenre === 'All Genres' ? 'green.300' : railText}
+          fontSize={{ base: 'xl', md: '2xl' }}
+        >
+          All Genres
+        </Text>
+      </HStack>
+
+      {genres.map((genre) => (
+        <HStack
+          key={genre.id}
+          borderRadius="xl"
+          color={railText}
+          cursor="pointer"
+          onClick={() => onSelectGenre(genre.name)}
+          px={1}
+          py={1}
+          spacing={4}
+          transition="transform 0.15s ease, opacity 0.15s ease"
+          bg={selectedGenre === genre.name ? genreButtonBg : 'transparent'}
+          _hover={{ opacity: 0.95, transform: 'translateX(4px)' }}
+        >
+          <Image
+            alt={genre.name}
+            borderRadius="lg"
+            boxSize="48px"
+            className="genre-thumb"
+            objectFit="cover"
+            src={genre.image}
+          />
+          <Text
+            color={selectedGenre === genre.name ? 'green.300' : railText}
+            fontSize={{ base: 'xl', md: '2xl' }}
+          >
+            {genre.name}
+          </Text>
+        </HStack>
+      ))}
+    </VStack>
+  )
+}
+
 function App() {
   const { colorMode, toggleColorMode } = useColorMode()
+  const { isOpen, onClose, onOpen } = useDisclosure()
   const darkEnabled = colorMode === 'dark'
   const [search, setSearch] = useState('')
   const [selectedGenre, setSelectedGenre] = useState<string>('All Genres')
@@ -153,6 +252,7 @@ function App() {
   const muted = darkEnabled ? 'whiteAlpha.600' : 'gray.500'
   const cardBg = darkEnabled ? '#1b1b1b' : 'white'
   const genreButtonBg = darkEnabled ? 'whiteAlpha.100' : 'blackAlpha.100'
+  const drawerBg = darkEnabled ? '#111111' : '#f5f5f7'
 
   const sortOptionLabels: Record<SortOption, string> = {
     Relevance: 'Order by: Relevance',
@@ -202,8 +302,22 @@ function App() {
   return (
     <Box bgImage={shellBg} minH="100vh" px={{ base: 4, md: 6 }} py={5}>
       <Stack spacing={8}>
-        <Flex align="center" gap={4}>
-          <BrandMark />
+        <Flex align={{ base: 'stretch', md: 'center' }} direction={{ base: 'column', md: 'row' }} gap={4}>
+          <Flex align="center" gap={3} w={{ base: 'full', md: 'auto' }}>
+            <IconButton
+              aria-label="Open genres"
+              color={railText}
+              display={{ base: 'inline-flex', lg: 'none' }}
+              icon={<MenuGlyph />}
+              onClick={onOpen}
+              bg={surface}
+              borderRadius="xl"
+              minW="56px"
+              h="56px"
+              _hover={{ bg: darkEnabled ? 'whiteAlpha.200' : 'blackAlpha.100' }}
+            />
+            <BrandMark />
+          </Flex>
           <InputGroup size="lg" flex="1">
             <InputLeftElement h="full" pl={4} pointerEvents="none">
               <SearchGlyph />
@@ -223,7 +337,7 @@ function App() {
               _focusVisible={{ boxShadow: '0 0 0 1px #68d391' }}
             />
           </InputGroup>
-          <HStack minW="fit-content" spacing={3}>
+          <HStack justify={{ base: 'space-between', md: 'flex-start' }} minW="fit-content" spacing={3} w={{ base: 'full', md: 'auto' }}>
             <Switch
               colorScheme="green"
               isChecked={darkEnabled}
@@ -240,73 +354,18 @@ function App() {
           gap={{ base: 8, lg: 12 }}
           templateColumns={{ base: '1fr', lg: '240px minmax(0, 1fr)' }}
         >
-          <Box>
+          <Box display={{ base: 'none', lg: 'block' }}>
             <Heading color={railText} fontSize={{ base: '3xl', md: '5xl' }} mb={8}>
               Genres
             </Heading>
 
-            <VStack align="stretch" spacing={5}>
-              <HStack
-                borderRadius="xl"
-                color={railText}
-                cursor="pointer"
-                onClick={() => setSelectedGenre('All Genres')}
-                px={1}
-                py={1}
-                spacing={4}
-                transition="transform 0.15s ease, opacity 0.15s ease"
-                bg={selectedGenre === 'All Genres' ? genreButtonBg : 'transparent'}
-                _hover={{ opacity: 0.95, transform: 'translateX(4px)' }}
-              >
-                <Flex
-                  align="center"
-                  bg={darkEnabled ? 'whiteAlpha.100' : 'blackAlpha.100'}
-                  borderRadius="lg"
-                  boxSize="48px"
-                  fontWeight="800"
-                  justify="center"
-                >
-                  All
-                </Flex>
-                <Text
-                  color={selectedGenre === 'All Genres' ? 'green.300' : railText}
-                  fontSize={{ base: 'xl', md: '2xl' }}
-                >
-                  All Genres
-                </Text>
-              </HStack>
-
-              {genres.map((genre) => (
-                <HStack
-                  key={genre.id}
-                  borderRadius="xl"
-                  color={railText}
-                  cursor="pointer"
-                  onClick={() => setSelectedGenre(genre.name)}
-                  px={1}
-                  py={1}
-                  spacing={4}
-                  transition="transform 0.15s ease, opacity 0.15s ease"
-                  bg={selectedGenre === genre.name ? genreButtonBg : 'transparent'}
-                  _hover={{ opacity: 0.95, transform: 'translateX(4px)' }}
-                >
-                  <Image
-                    alt={genre.name}
-                    borderRadius="lg"
-                    boxSize="48px"
-                    className="genre-thumb"
-                    objectFit="cover"
-                    src={genre.image}
-                  />
-                  <Text
-                    color={selectedGenre === genre.name ? 'green.300' : railText}
-                    fontSize={{ base: 'xl', md: '2xl' }}
-                  >
-                    {genre.name}
-                  </Text>
-                </HStack>
-              ))}
-            </VStack>
+            <GenreMenu
+              darkEnabled={darkEnabled}
+              genreButtonBg={genreButtonBg}
+              onSelectGenre={setSelectedGenre}
+              railText={railText}
+              selectedGenre={selectedGenre}
+            />
           </Box>
 
           <Stack spacing={8}>
@@ -434,6 +493,28 @@ function App() {
           </Stack>
         </Grid>
       </Stack>
+
+      <Drawer isOpen={isOpen} onClose={onClose} placement="left" size="xs">
+        <DrawerOverlay />
+        <DrawerContent bg={drawerBg}>
+          <DrawerCloseButton color={railText} />
+          <DrawerHeader color={railText} fontSize="2xl">
+            Genres
+          </DrawerHeader>
+          <DrawerBody pb={8}>
+            <GenreMenu
+              darkEnabled={darkEnabled}
+              genreButtonBg={genreButtonBg}
+              onSelectGenre={(genre) => {
+                setSelectedGenre(genre)
+                onClose()
+              }}
+              railText={railText}
+              selectedGenre={selectedGenre}
+            />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Box>
   )
 }
