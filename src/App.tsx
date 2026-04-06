@@ -83,14 +83,14 @@ function BrandMark() {
   )
 }
 
-function SelectMenu({
+function SelectMenu<T extends string>({
   label,
   options,
   onSelect,
 }: {
   label: string
-  options: readonly string[]
-  onSelect: (value: string) => void
+  options: readonly T[]
+  onSelect: (value: T) => void
 }) {
   return (
     <Menu>

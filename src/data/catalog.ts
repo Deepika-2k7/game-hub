@@ -7,6 +7,7 @@ import rpgThumb from '../assets/genres/rpg.svg'
 import shooterThumb from '../assets/genres/shooter.svg'
 import strategyThumb from '../assets/genres/strategy.svg'
 
+
 import cyberpunkCover from '../assets/covers/cyberpunk-2077.svg'
 import eldenRingCover from '../assets/covers/elden-ring.svg'
 import forzaCover from '../assets/covers/forza-horizon-5.svg'
@@ -33,14 +34,14 @@ export type Game = {
 }
 
 export const genres: Genre[] = [
-  { id: 1, name: 'Action', image: gtaCover },
-  { id: 2, name: 'Indie', image: hadesCover },
-  { id: 3, name: 'Adventure', image: witcherCover },
-  { id: 4, name: 'RPG', image: eldenRingCover },
-  { id: 5, name: 'Shooter', image: cyberpunkCover },
-  { id: 6, name: 'Strategy', image: strategyCover },
-  { id: 7, name: 'Racing', image: forzaCover },
-  { id: 8, name: 'Puzzle', image: portalCover },
+  { id: 1, name: 'Action', image: actionThumb },
+  { id: 2, name: 'Indie', image: indieThumb },
+  { id: 3, name: 'Adventure', image: adventureThumb },
+  { id: 4, name: 'RPG', image: rpgThumb },
+  { id: 5, name: 'Shooter', image: shooterThumb },
+  { id: 6, name: 'Strategy', image: strategyThumb },
+  { id: 7, name: 'Racing', image: racingThumb },
+  { id: 8, name: 'Puzzle', image: puzzleThumb },
 ]
 
 export const games: Game[] = [
