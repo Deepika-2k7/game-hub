@@ -1,0 +1,25 @@
+.wrapper {
+  min-width: min(100%, 28rem);
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.95rem 1.1rem;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.error {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: var(--danger);
+  font-size: 0.85rem;
+}
